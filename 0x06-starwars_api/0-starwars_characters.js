@@ -1,40 +1,24 @@
 #!/usr/bin/node
-const util = require('util');
-const request = util.promisify(require('request'));
-const movieId = process.argv[2];
 
-if (!movieId) {
-    console.log("Usage: node starWarsCharacters.js <Movie ID>");
-    process.exit(1);
-}
+const REQUEST = require('request');
+const UTIL = require('util');
+const FILM_ID = process.argv[2];
+const FILM_URL = `https://swapi-api.alx-tools.com/api/films/${FILM_ID}`;
 
-async function getStarWarsCharacters(movieId) {
-    try {
-        // Fetch the film details from the Star Wars API
-        const filmResponse = await fetch(`https://swapi.dev/api/films/${movieId}/`);
-        if (!filmResponse.ok) {
-            throw new Error(`Error fetching film data: ${filmResponse.statusText}`);
-        }
+const PROMISIFIED_REQUEST = UTIL.promisify(REQUEST);
 
-        const filmData = await filmResponse.json();
-
-        // Extract the characters list
-        const characters = filmData.characters;
-
-        // Print each character's name
-        for (const characterUrl of characters) {
-            const characterResponse = await fetch(characterUrl);
-            if (!characterResponse.ok) {
-                throw new Error(`Error fetching character data: ${characterResponse.statusText}`);
-            }
-
-            const characterData = await characterResponse.json();
-            console.log(characterData.name);
-        }
-
-    } catch (error) {
-        console.error(error.message);
+(async () => {
+  try {
+    const FILM = (await PROMISIFIED_REQUEST(FILM_URL, { json: true })).body;
+    const CHARACTER_URLS = FILM.characters;
+    let index = 0;
+    while (index < CHARACTER_URLS.length) {
+      const CHARACTER_URL = CHARACTER_URLS[index];
+      const CHARACTER = (await PROMISIFIED_REQUEST(CHARACTER_URL, { json: true })).body;
+      console.log(CHARACTER.name);
+      index++;
     }
-}
-
-getStarWarsCharacters(movieId);
+  } catch (ERROR) {
+    console.log('An error occurred:', ERROR);
+  }
+})();
