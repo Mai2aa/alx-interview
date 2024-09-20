@@ -1,24 +1,28 @@
 #!/usr/bin/python3
-''' Change comes from within'''
+"""This script determines the minimum number of coins needed"""
 
 
 def makeChange(coins, total):
-    '''returs the fewest number of coins needed to meet 
-    a given amount of coins'''
+    """
+    Determines the fewest number of coins
+    """
+
     if total <= 0:
         return 0
-    coin = 0
-    remain = total
-    index = 0
-    slc = sorted(coins, reverse=True)
-    n = len(coins)
-    while remain > 0:
-        if index >= n:
-            return -1
-        if remain - slc[index] >= 0:
-            remain -= slc[index]
-            coin += 1
-        else:
-            index += 1
 
-    return coin
+    CC = 0
+    R = total
+    IDX = 0
+    S_L_C = sorted(coins, reverse=True)
+    N = len(coins)
+
+    while R > 0:
+        if IDX >= N:
+            return -1
+        if R - S_L_C[IDX] >= 0:
+            R -= S_L_C[IDX]
+            CC += 1
+        else:
+            IDX += 1
+
+    return CC
